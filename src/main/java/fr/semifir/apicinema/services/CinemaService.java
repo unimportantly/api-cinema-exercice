@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CinemaService {
@@ -48,13 +49,13 @@ public class CinemaService {
      * @param id
      * @return
      */
-    public Optional<CinemaDTO> findByID(String id) throws NotFoundException {
+    public Optional<CinemaDTO> findByID(String id) throws NoSuchElementException {
         Optional<Cinema> cinema = this.repository.findById(id);
         Optional<CinemaDTO> cinemaDTO;
         if (cinema.isPresent()) {
            cinemaDTO = Optional.of(mapper.map(cinema.get(), CinemaDTO.class));
         } else {
-            throw new NotFoundException("Le cinema n'a pas été trouvé");
+            throw new NoSuchElementException("Le cinema n'a pas été trouvé");
         }
         return cinemaDTO;
     }
