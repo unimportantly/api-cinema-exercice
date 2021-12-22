@@ -5,6 +5,7 @@ import fr.semifir.apicinema.entities.Cinema;
 import fr.semifir.apicinema.exceptions.NotFoundException;
 import fr.semifir.apicinema.services.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("cinemas")
+@RequestMapping("/cinemas")
 public class CinemaController {
 
     @Autowired
@@ -35,8 +36,8 @@ public class CinemaController {
     }
 
     @PostMapping
-    public CinemaDTO save(@RequestBody Cinema cinema) {
-        return this.service.save(cinema);
+    public ResponseEntity<CinemaDTO> save(@RequestBody Cinema cinema) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(cinema));
     }
 
     @PutMapping
