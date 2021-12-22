@@ -36,12 +36,12 @@ public class CinemaController {
     }
 
     @PostMapping
-    public ResponseEntity<CinemaDTO> save(@RequestBody Cinema cinema) {
+    public ResponseEntity<CinemaDTO> save(@RequestBody CinemaDTO cinema) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(cinema));
     }
 
     @PutMapping
-    public CinemaDTO update(@RequestBody Cinema cinema) {
+    public CinemaDTO update(@RequestBody CinemaDTO cinema) {
         return this.service.save(cinema);
     }
 
