@@ -32,6 +32,7 @@ public class CinemaControllerTest {
     @MockBean
     private CinemaService cinemaService;
 
+    // methods that'll allow us to create cinema objects & to turn them into & from json
     public CinemaDTO cinemaDTO(){
         return new CinemaDTO("azmdkamzkfa", "gaumont");
     }
@@ -52,9 +53,9 @@ public class CinemaControllerTest {
 
     @Test
     public void testCreateOneCinema() throws Exception{
-        CinemaDTO cinemaDTO = cinemaDTO();
+        // create a cinema object & map it into a json to mock-post
         Gson json = new GsonBuilder().create();
-        String string = json.toJson(cinemaDTO);
+        String string = json.toJson(cinemaDTO());
         this.mockMvc.perform(post("/cinemas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(string))
@@ -79,6 +80,7 @@ public class CinemaControllerTest {
         // persist with the return we got
         CinemaDTO cinemaDTO = gson().fromJson(result.getResponse().getContentAsString(),
                 CinemaDTO.class);
+        // test for equivalence
         Assertions.assertEquals(cinemaDTO.getNom(), "gaumont");
     }
 
@@ -111,6 +113,7 @@ public class CinemaControllerTest {
         // map the result back to a dto to check if the data is consistent
         CinemaDTO finalCinemaDTO = gson().fromJson(mvcResult.getResponse().getContentAsString(),
                 CinemaDTO.class);
+        // test for equivalence
         Assertions.assertEquals(finalCinemaDTO.getNom(), "Pathe");
     }
 
