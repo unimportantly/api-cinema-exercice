@@ -115,8 +115,16 @@ public class CinemaControllerTest {
     }
 
     @Test
-    public void testDeleteCinema(){
-        // have to create a cinema to delete
-
+    public void testDeleteCinema() throws Exception {
+        // have to create a cinema to delete and store it as a json
+        String body = gson().toJson(cinemaDTO());
+        this.mockMvc.perform(delete("/cinemas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isOk());
+        // checks if the entity has been deleted
+        this.mockMvc.perform(get("/cinemas/azmdkamzkfa"))
+                .andExpect(status().isNotFound());
     }
+
 }
