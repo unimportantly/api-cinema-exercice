@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import fr.semifir.apicinema.controllers.CinemaController;
 import fr.semifir.apicinema.dtos.cinema.CinemaDTO;
 import fr.semifir.apicinema.services.CinemaService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
@@ -31,6 +33,10 @@ public class CinemaControllerTest {
 
     public CinemaDTO cinemaDTO(){
         return new CinemaDTO("azmdkamzkfa", "gaumont");
+    }
+
+    public Gson gson(){
+        return new GsonBuilder().create();
     }
 
     @Test
@@ -59,9 +65,17 @@ public class CinemaControllerTest {
 
     @Test
     public void testFindOneCinema() throws Exception{
-        // create a cinema to find
-        CinemaDTO cinemaDTO = cinemaDTO();
+        // create a cinema to find and persists it
         BDDMockito.given(cinemaService.findByID("azmdkamzkfa"))
                 .willReturn(Optional.of(cinemaDTO()));
+        // verify something was created and stores the result of the request
+        MvcResult result = this.mockMvc.perform(get("/cinemas/azmdkamzkfa"))
+                .andExpect(status().isOk())
+                .andReturn();
+        // map the result into a dto so we can compare the cinemaDTO we tried to
+        // persist with the return we got
+        CinemaDTO cinemaDTO = gson().fromJson(result.getResponse().getContentAsString(),
+                CinemaDTO.class);
+        Assertions.assertEquals(cinemaDTO.getNom(), "gaumont");
     }
 }
